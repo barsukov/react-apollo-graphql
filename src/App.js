@@ -1,20 +1,19 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import AddPost from './components/AddPost.js';
+
 import {
   ApolloClient,
   gql,
   graphql,
   ApolloProvider,
+  createNetworkInterface
 } from 'react-apollo';
-import { makeExecutableSchema, addMockFunctionsToSchema } from 'graphql-tools';
 
-import { mockNetworkInterfaceWithSchema } from 'apollo-test-utils';
-import { typeDefs } from './schema';
-
-const schema = makeExecutableSchema({ typeDefs });
-addMockFunctionsToSchema({ schema });
-const mockNetworkInterface = mockNetworkInterfaceWithSchema({ schema });
+const networkInterface = createNetworkInterface({ 
+  uri: 'http://localhost:4000/graphql',
+});
 
 const PostLists = ({ data: {loading, error, posts }}) => {
    if (loading) {
@@ -23,13 +22,14 @@ const PostLists = ({ data: {loading, error, posts }}) => {
    if (error) {
      return <p>{error.message}</p>;
    }
-   return <ul>
+   return <div className="Posts">
+     <AddPost />
      { posts.map( post => <li key={post.id}>{post.name}</li> ) }
-   </ul>;
+   </div>;
  };
 
 const client = new ApolloClient({
-   networkInterface: mockNetworkInterface,
+   networkInterface,
  });
 
 const postsListQuery = gql`

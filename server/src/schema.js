@@ -9,6 +9,12 @@ type Post {
 type Query {
    posts: [Post]    # "[]" means this is a list of posts
 }
+
+# The mutation root type, used to define all mutations.
+type Mutation {
+  # A mutation to add a new channel to the list of channels
+  addPost(name: String!): Post
+}
 `;
 import { resolvers } from './resolvers';
 const schema = makeExecutableSchema({ typeDefs, resolvers });
