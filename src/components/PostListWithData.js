@@ -11,7 +11,9 @@ const PostLists = ({ data: {loading, error, posts }}) => {
    }
    return <div className="Posts">
      <AddPost />
-     { posts.map( post => <li key={post.id}>{post.name}</li> ) }
+     
+     { posts.map( post => 
+       <div key={post.id} className={'post ' + (post.id < 0 ? 'optimistic' : '')}>{post.name}</div>) }
    </div>;
  };
 

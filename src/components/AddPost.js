@@ -10,7 +10,21 @@ const AddPost = ({ mutate }) => {
       evt.persist();
       mutate({ 
         variables: { name: evt.target.value },
-        refetchQueries: [ { query: postsListQuery }],
+        optimisticResponse: {
+          addPost: {
+            name: evt.target.value,
+            id: Math.round(Math.random() * -1000000),
+            __typename: 'Post',
+          },
+        },
+        update: (store, { data: { addPost } }) => {
+          // Read the data from the cache for this query.
+          const data = store.readQuery({query: postsListQuery });
+          // Add our post from the mutation to the end.
+          data.posts.push(addPost);
+          // Write the data back to the cache.
+          store.writeQuery({ query: postsListQuery, data });
+        },
       })
       .then( res => {
         evt.target.value = '';  
@@ -38,4 +52,5 @@ const addPostMutation = gql`
 const AddPostWithMutation = graphql(
   addPostMutation
 )(AddPost);
+
 export default AddPostWithMutation;
