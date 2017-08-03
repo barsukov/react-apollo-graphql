@@ -14,7 +14,8 @@ import PostDetails from './components/PostDetails';
 import {
   ApolloClient,
   ApolloProvider,
-  createNetworkInterface
+  createNetworkInterface,
+  toIdValue,
 } from 'react-apollo';
 
 const networkInterface = createNetworkInterface({ 
@@ -27,8 +28,25 @@ networkInterface.use([{
   },
 }]);
 
+function dataIdFromObject (result) {
+  if (result.__typename) {
+    if (result.id !== undefined) {
+      return `${result.__typename}:${result.id}`;
+    }
+  }
+  return null;
+}
+
 const client = new ApolloClient({
    networkInterface,
+   customResolvers: {
+    Query: {
+      post: (_, args) => {
+        return toIdValue(dataIdFromObject({ __typename: 'Post', id: args['id'] }))
+      },
+    },
+  },
+  dataIdFromObject,
  });
 
 class App extends Component {

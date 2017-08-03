@@ -2,6 +2,7 @@ import React from 'react';
 import { gql, graphql } from 'react-apollo';
 import CommentList from './CommentList';
 import NotFound from './NotFound';
+import PostPreview from './PostPreview';
 
 export const postDetailsQuery = gql`
   query PostDetailsQuery($postId : ID!) {
@@ -18,7 +19,7 @@ export const postDetailsQuery = gql`
 
 const PostDetails = ({ data: {loading, error, post }, match }) => {
   if (loading) {
-    return <p>Loading...</p>;
+    return <PostPreview postId={match.params.postId}/>;
   }
   if (error) {
     return <p>{error.message}</p>;

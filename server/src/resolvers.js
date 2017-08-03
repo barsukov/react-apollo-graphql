@@ -35,7 +35,6 @@ export const resolvers = {
     },
     addComment: (root, { comment }) => {
       const post = posts.find(post => post.id === comment.postId);
-      console.log(comment)
       if(!post)
         throw new Error("post does not exist");
       const newComment = { id: String(nextCommentId++), text: comment.text };
