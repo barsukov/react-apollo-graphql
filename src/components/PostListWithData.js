@@ -1,7 +1,7 @@
 import React from 'react';
 import { gql, graphql } from 'react-apollo';
 import AddPost from './AddPost.js';
-
+import { Link } from 'react-router-dom';
 const PostLists = ({ data: {loading, error, posts }}) => {
    if (loading) {
      return <p>Loading ...</p>;
@@ -13,7 +13,12 @@ const PostLists = ({ data: {loading, error, posts }}) => {
      <AddPost />
      
      { posts.map( post => 
-       <div key={post.id} className={'post ' + (post.id < 0 ? 'optimistic' : '')}>{post.name}</div>) }
+        <div key={post.id} className={'post ' + (post.id < 0 ? 'optimistic' : '')}>
+          <Link to={post.id < 0 ? `/` : `post/${post.id}`}>
+            {post.name}
+          </Link>
+        </div> )
+     }
    </div>;
  };
 

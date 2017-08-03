@@ -2,6 +2,14 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import PostListWithData from './components/PostListWithData'
+import NotFound from './components/NotFound';
+import {
+  BrowserRouter,
+  Link,
+  Route,
+  Switch,
+} from 'react-router-dom';
+import PostDetails from './components/PostDetails';
 
 import {
   ApolloClient,
@@ -27,13 +35,16 @@ class App extends Component {
   render() {
     return (
       <ApolloProvider client={client}>
-        <div className="App">
-          <div className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <h2>Welcome to Apollo and React</h2>
+        <BrowserRouter>
+          <div className="App">
+            <Link to="/" className="navbar">React + GraphQL Tutorial</Link>
+            <Switch>
+              <Route exact path="/" component={PostListWithData}/>
+              <Route path="/post/:postId" component={PostDetails}/>
+              <Route component={ NotFound }/>
+            </Switch>
           </div>
-          <PostListWithData />
-        </div>
+        </BrowserRouter>
       </ApolloProvider>
     );
   }
