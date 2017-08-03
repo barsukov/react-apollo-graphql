@@ -16,6 +16,7 @@ const posts = [{
 }];
 
 let nextId = 3;
+let nextCommentId = 3;
 
 export const resolvers = {
   Query: {
@@ -28,9 +29,18 @@ export const resolvers = {
   },
   Mutation: {
     addPost: (root, args) => {
-      const newPost = { id:  String(nextId++), comments: [], name: args.name };
+      const newPost = { id: String(nextId++), comments: [], name: args.name };
       posts.push(newPost);
       return newPost;
+    },
+    addComment: (root, { comment }) => {
+      const post = posts.find(post => post.id === comment.postId);
+      console.log(comment)
+      if(!post)
+        throw new Error("post does not exist");
+      const newComment = { id: String(nextCommentId++), text: comment.text };
+      post.comments.push(newComment);
+      return newComment;
     },
   },
 };

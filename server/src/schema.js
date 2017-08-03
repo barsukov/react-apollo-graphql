@@ -5,10 +5,17 @@ type Post {
    name: String
    comments: [Comment]!
 }
+
+input CommentInput{
+  postId: ID!
+  text: String
+}
+
 type Comment {
   id: ID!
   text: String
 }
+
 # This type specifies the entry points into our API. In this case
 # there is only one - "posts" - which returns a list of posts.
 type Query {
@@ -16,10 +23,12 @@ type Query {
    post(id: ID!): Post
 }
 
+
 # The mutation root type, used to define all mutations.
 type Mutation {
   # A mutation to add a new channel to the list of channels
   addPost(name: String!): Post
+  addComment(comment: CommentInput!): Comment
 }
 `;
 import { resolvers } from './resolvers';
