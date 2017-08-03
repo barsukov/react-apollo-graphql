@@ -3,11 +3,17 @@ const typeDefs = `
 type Post {
    id: ID!                # "!" denotes a required field
    name: String
+   comments: [Comment]!
+}
+type Comment {
+  id: ID!
+  text: String
 }
 # This type specifies the entry points into our API. In this case
 # there is only one - "posts" - which returns a list of posts.
 type Query {
    posts: [Post]    # "[]" means this is a list of posts
+   post(id: ID!): Post
 }
 
 # The mutation root type, used to define all mutations.
