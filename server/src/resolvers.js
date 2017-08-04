@@ -1,4 +1,5 @@
-// src/resolvers.js
+import { PubSub, withFilter } from 'graphql-subscriptions';
+
 const posts = [{
   id: '1',
   name: 'news',
@@ -17,6 +18,7 @@ const posts = [{
 
 let nextId = 3;
 let nextCommentId = 3;
+const pubsub = new PubSub();
 
 export const resolvers = {
   Query: {
@@ -39,7 +41,19 @@ export const resolvers = {
         throw new Error("post does not exist");
       const newComment = { id: String(nextCommentId++), text: comment.text };
       post.comments.push(newComment);
+
+      pubsub.publish('commentAdded', { commentAdded: newComment, postId: comment.postId });
       return newComment;
     },
   },
+  Subscription: {
+    commentAdded: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator('commentAdded'),
+        (payload, variables) => {
+          return payload.postId === variables.postId;
+        }
+      )
+    }
+  }
 };

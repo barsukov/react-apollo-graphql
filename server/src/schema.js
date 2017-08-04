@@ -23,6 +23,9 @@ type Query {
    post(id: ID!): Post
 }
 
+type Subscription {
+  commentAdded(postId: ID!): Comment
+}
 
 # The mutation root type, used to define all mutations.
 type Mutation {
