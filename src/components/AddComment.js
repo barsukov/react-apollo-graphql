@@ -29,7 +29,11 @@ const AddComment = ({ match, mutate }) => {
             }
           });
           // Add our Comment from the mutation to the end.
-          data.post.comments.push(addComment);
+          if (!data.post.comments.find((comment) => comment.id === addComment.id))
+          {
+            // Add our Comment from the mutation to the end.
+            data.post.comments.push(addComment);
+          }
           // Write the data back to the cache.
           store.writeQuery({
             query: postDetailsQuery,

@@ -9,6 +9,7 @@ import {
   Route,
   Switch,
 } from 'react-router-dom';
+
 import PostDetails from './components/PostDetails';
 
 import {
@@ -18,15 +19,23 @@ import {
   toIdValue,
 } from 'react-apollo';
 
-const networkInterface = createNetworkInterface({ 
-  uri: 'http://localhost:4000/graphql',
-});
+import { SubscriptionClient, addGraphQLSubscriptions } from 'subscriptions-transport-ws';
 
+const networkInterface = createNetworkInterface({ uri: 'http://localhost:4000/graphql' });
 networkInterface.use([{
   applyMiddleware(req, next) {
     setTimeout(next, 500);
   },
 }]);
+
+const wsClient = new SubscriptionClient(`ws://localhost:4000/subscriptions`, {
+  reconnect: true
+});
+
+const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
+  networkInterface,
+  wsClient
+);
 
 function dataIdFromObject (result) {
   if (result.__typename) {
